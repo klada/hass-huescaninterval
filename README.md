@@ -1,12 +1,14 @@
 # hass-huescaninterval
 
-This custom component allows you to modify the `scan_interval` of Home Assistant's official Hue integration. This allows you to use devices such as buttons and motion sensors with a much smaller delay.
+This custom component allows you to modify the `scan_interval` of Home Assistant's official Hue integration. This enables you to use devices such as buttons and motion sensors with a much smaller delay.
 
-The code is based on the approach of [Hue-remotes-HASS](https://github.com/robmarkcole/Hue-remotes-HASS). Special thanks to [https://github.com/robmarkcole](@robmarkcole).
+The code is based on the approach of [Hue-remotes-HASS](https://github.com/robmarkcole/Hue-remotes-HASS). Special thanks to [@robmarkcole](https://github.com/robmarkcole).
 
-## Warning
+## :warning: Warning
 
 This component lowers the `scan_interval` of your Hue bridge to 0.5 seconds. Depending on your environment your Hue Bridge may become unstable! There is a reason why the HASS core developers will not lower the scan interval by default!
+
+This component does not add any device support. All it does is adjusting the scan interval. Everything else you need for processing Hue events is included in recent versions of Home Assistant.
 
 ## Installation
 
@@ -20,7 +22,7 @@ huescaninterval:
 
 This is a sample automation which reacts to the large Hue Tap button:
 
-```
+```yaml
 - alias: Tap Automation Demo
   trigger:
     - platform: event
@@ -40,8 +42,6 @@ You can use Home Assistant's event listener to get the events of your Hue sensor
 
 1. Open the Developer Tools in Home Assistant
 2. Click on Events
-3. Start listening for `hue_event` events and use the ids and events from the inspector in your automations :)
-
-To get the exact events of your switches and buttons you can run the 
+3. Start listening for `hue_event` events and use the ids and events from the inspector in your automations :grin:
 
 
