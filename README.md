@@ -1,56 +1,47 @@
-[![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/ambv/black)
-[![build status](http://img.shields.io/travis/robmarkcole/Hue-remotes-HASS/master.svg?style=flat)](https://travis-ci.org/robmarkcole/Hue-remotes-HASS)
-[![Coverage](https://codecov.io/github/robmarkcole/Hue-remotes-HASS/coverage.svg?branch=master)](https://codecov.io/gh/robmarkcole/Hue-remotes-HASS)
-[![Sponsor](https://img.shields.io/badge/sponsor-%F0%9F%92%96-green)](https://github.com/sponsors/robmarkcole)
+# hass-huescaninterval
 
-[FOR COMMUNITY SUPPORT PLEASE USE THIS THREAD](https://community.home-assistant.io/t/hue-motion-sensors-remotes-custom-component)
+This custom component allows you to modify the `scan_interval` of Home Assistant's official Hue integration. This allows you to use devices such as buttons and motion sensors with a much smaller delay.
 
-For Hue motion sensors checkout [Hue-sensors-HASS](https://github.com/robmarkcole/Hue-sensors-HASS)
+The code is based on the approach of [Hue-remotes-HASS](https://github.com/robmarkcole/Hue-remotes-HASS). Special thanks to [https://github.com/robmarkcole](@robmarkcole).
 
-# Hue-remotes-HASS
-Custom integration for Hue &amp; Lutron Aurora [Friends of Hue](https://www2.meethue.com/en-us/works-with) (FOH) remotes with Home Assistant.
+## Warning
 
-## Overview
-
-This custom integration provides the missing support for `remote` devices in the [official Hue integration of HA Core](https://www.home-assistant.io/integrations/hue), by registering the platform in the main integration and sharing the sensor data with it.
-
-As this new platform imposes a lower `scan_interval` for all hue sensors (of 1Hz), sensors from the main hue integration will also increase their refresh rate to 1 Hz.
-
-Be advised that the increased update of this custom integration may cause connectivity problems which can result in errors in the official hue integration, please do not create any issue for this. If you can't live with these errors, do not use this custom integration.
+This component lowers the `scan_interval` of your Hue bridge to 0.5 seconds. Depending on your environment your Hue Bridge may become unstable! There is a reason why the HASS core developers will not lower the scan interval by default!
 
 ## Installation
 
-Place the `custom_components` folder in your configuration directory (or add its contents to an existing `custom_components` folder). You need to set up your [Hue bridge](https://www.home-assistant.io/integrations/hue) first. TODO Alternatively install via [HACS](https://hacs.xyz/).
-
-## Configuration
-
-Once installed add to your configuration:
-
-```
-remote:
-  - platform: hueremote
+1. Place the `huescaninterval` folder into your `custom_components` directory.
+2. Add this to your `configuration.yaml`:
+```yaml
+huescaninterval:
 ```
 
-## Supported remotes
-* [Hue dimmer switch](https://www2.meethue.com/en-us/p/hue-dimmer-switch/046677473372) - can be used for a click and long press (hold button for 2 sec and see LED blink twice).
-* [Hue tap switch](https://www2.meethue.com/en-us/p/hue-tap-switch/046677473365)
-* [Hue smart button](https://www2.meethue.com/en-us/p/hue-smart-button/046677553715)
-* [Lutron Aurora smart bulb dimmer](http://www.lutron.com/en-US/products/pages/standalonecontrols/dimmers-switches/smartbulbdimmer/overview.aspx)
-* [Lutron Aurora rotary dimmer](http://www.lutron.com/en-US/Products/Pages/StandAloneControls/Dimmers-Switches/RotaryDimmer/Overview.aspx)
+## Reacting to button events in automations
 
-## Developers
-* Create venv -> `$ python3 -m venv venv`
-* Use venv -> `$ source venv/bin/activate`
-* Install requirements -> `$ pip install -r requirements.txt` & `$ pip install -r requirements-dev.txt`
-* Run tests -> `$ venv/bin/py.test --cov=custom_components tests/ -vv -p no:warnings`
-* Black format -> `$ venv/bin/black custom_components/*` (or setup VScode for format on save)
+This is a sample automation which reacts to the large Hue Tap button:
 
-## Contributors
-Please format code usign [Black](https://github.com/psf/black) before opening a pull request.
+```
+- alias: Tap Automation Demo
+  trigger:
+    - platform: event
+      event_type: hue_event
+      event_data:
+        id: hue_tap_1
+        event: 34
+  condition: []
+  action:
+    - service: light.toggle
+      entity_id: light.demo_light
+```
 
-A big thanks to [Atsuko Ito](https://github.com/yottatsa) and [Eugenio Panadero](https://github.com/azogue) for their many contributions to this work!
+## Inspecting button events
 
-## ✨ Support this work
-https://github.com/sponsors/robmarkcole
+You can use Home Assistant's event listener to get the events of your Hue sensors and buttons:
 
-If you or your business find this work useful please consider becoming a sponsor at the link above, this really helps justify the time I invest in maintaining this repo. As we say in England, 'every little helps' - thanks in advance!
+1. Open the Developer Tools in Home Assistant
+2. Click on Events
+3. Start listening for `hue_event` events and use the ids and events from the inspector in your automations :)
+
+To get the exact events of your switches and buttons you can run the 
+
+
