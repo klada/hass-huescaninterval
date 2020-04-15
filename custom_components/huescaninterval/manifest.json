@@ -1,12 +1,13 @@
 {
-    "domain": "hueremote",
-    "name": "Hue remotes custom integration",
-    "documentation": "https://github.com/robmarkcole/Hue-remotes-HASS",
+    "domain": "huescaninterval",
+    "name": "Provides a custom scan_scan interval for Hue",
+    "documentation": "https://github.com/klada/hass-huescaninterval",
     "requirements": [],
     "dependencies": [
         "hue"
     ],
     "codeowners": [
-        "@robmarkcole"
+        "@robmarkcole",
+        "@klada"
     ]
 }
